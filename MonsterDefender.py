@@ -24,8 +24,13 @@ def main():
 
   display = pygame.display.set_mode((display_width, display_height))
   display.fill((0, 0, 255))
-  pygame.display.flip()
   pygame.display.set_caption('Monster Defender')
+
+  # Set program icon
+  icon = pygame.image.load('main.png').convert_alpha()
+  pygame.display.set_icon(icon)
+
+  pygame.display.flip()
   while not is_quitting():
     time.sleep(0.5)
 
