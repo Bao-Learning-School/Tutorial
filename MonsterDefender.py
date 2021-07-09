@@ -3,6 +3,8 @@
 import pygame
 import time
 
+import sprites
+
 
 def process_events(cmd_spites):
   """Check if user hits the quit button"""
@@ -18,13 +20,15 @@ def process_events(cmd_spites):
 
 
 class Cannon(pygame.sprite.Sprite):
-  def __init__(self, screen_size):
+  def __init__(self, screen_size, all_sprites):
     super().__init__()
     size = (100,100)
     image = pygame.image.load('image/cannon.png').convert_alpha()
     self.image = pygame.transform.scale(image, size)
     self.rect = pygame.Rect((screen_size[0] // 2,
                              screen_size[1] - size[1] - 20), size)
+    self.boundary = pygame.Rect((0, 0), screen_size)
+    self.all_sprites = all_sprites
 
   def update(self):
     speed = 5
@@ -33,6 +37,16 @@ class Cannon(pygame.sprite.Sprite):
       self.rect = self.rect.move(-speed, 0)
     elif keys_pressed[pygame.K_RIGHT]:
       self.rect = self.rect.move(speed, 0)
+    if keys_pressed[pygame.K_SPACE]:
+      image_info = sprites.ImageInfo(
+          image=pygame.image.load('image/bullet32x32.ico'),
+          direction=pygame.Vector2(-10, 0))  
+      position = (self.rect.centerx, self.rect.top)
+      bullet = sprites.Bullet(image_info, position,
+          self.boundary,
+          sprites.ShootgingStrategy.NO_TARGET, None)
+      self.all_sprites.add(bullet)
+      
 
 def main():
   """Program main function."""
@@ -50,7 +64,7 @@ def main():
   bg_image = pygame.transform.scale(bg_image, display_size)
   all_sprites = pygame.sprite.Group()
   cmd_sprites = pygame.sprite.Group()
-  all_sprites.add(Cannon(display_size))
+  all_sprites.add(Cannon(display_size,all_sprites))
   
 
   clock = pygame.time.Clock()
