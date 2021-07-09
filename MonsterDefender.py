@@ -3,6 +3,8 @@
 import pygame
 import time
 
+from pygame import image
+
 import sprites
 
 
@@ -40,8 +42,9 @@ class Cannon(pygame.sprite.Sprite):
     if keys_pressed[pygame.K_SPACE]:
       image_info = sprites.ImageInfo(
           image=pygame.image.load('image/bullet32x32.png'),
-          direction=pygame.Vector2(-10, 0))  
-      position = (self.rect.centerx, self.rect.top)
+          direction=pygame.Vector2(0, -10))  
+      position = (self.rect.centerx - image_info.image.get_width() // 2,
+                  self.rect.top - image_info.image.get_height())
       bullet = sprites.Bullet(image_info, position,
           self.boundary,
           sprites.ShootgingStrategy.NO_TARGET, None)
