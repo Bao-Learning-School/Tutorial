@@ -21,9 +21,10 @@ class Cannon(pygame.sprite.Sprite):
   def __init__(self, screen_size):
     super().__init__()
     size = (100,100)
-    image = pygame.image.load('cannon.png').convert_alpha()
+    image = pygame.image.load('image/cannon.png').convert_alpha()
     self.image = pygame.transform.scale(image, size)
-    self.rect = pygame.Rect((0, screen_size[1] - size[1]), size)
+    self.rect = pygame.Rect((screen_size[0] // 2,
+                             screen_size[1] - size[1] - 20), size)
 
   def update(self):
     speed = 5
@@ -42,9 +43,11 @@ def main():
   pygame.display.set_caption('Monster Defender')
 
   # Set program icon
-  icon = pygame.image.load('FOOCHIR.jpeg').convert_alpha()
+  icon = pygame.image.load('image/FOOCHIR.jpeg').convert_alpha()
   pygame.display.set_icon(icon)
 
+  bg_image = pygame.image.load('image/background/bg_lawn.jpg')
+  bg_image = pygame.transform.scale(bg_image, display_size)
   all_sprites = pygame.sprite.Group()
   cmd_sprites = pygame.sprite.Group()
   all_sprites.add(Cannon(display_size))
@@ -52,7 +55,8 @@ def main():
 
   clock = pygame.time.Clock()
   while process_events(cmd_sprites):
-    display.fill((0, 0, 255))
+    # display.fill((0, 0, 255))
+    display.blit(bg_image, (0, 0))
     all_sprites.update()
     all_sprites.draw(display)
 
