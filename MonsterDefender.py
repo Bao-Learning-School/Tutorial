@@ -39,7 +39,7 @@ class Cannon(pygame.sprite.Sprite):
       self.rect = self.rect.move(speed, 0)
     if keys_pressed[pygame.K_SPACE]:
       image_info = sprites.ImageInfo(
-          image=pygame.image.load('image/bullet32x32.ico'),
+          image=pygame.image.load('image/bullet32x32.png'),
           direction=pygame.Vector2(-10, 0))  
       position = (self.rect.centerx, self.rect.top)
       bullet = sprites.Bullet(image_info, position,
