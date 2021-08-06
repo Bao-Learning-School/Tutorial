@@ -16,10 +16,9 @@ def process_events(cmd_spites):
     elif event.type == pygame.KEYDOWN:
       if event.key == pygame.K_ESCAPE:
         return False
-      for sprite in cmd_spites:
-        sprite.process_event(event)
+    for sprite in cmd_spites:
+      sprite.process_event(event)
   return True
-
 
 class Cannon(pygame.sprite.Sprite):
   def __init__(self, screen_size, all_sprites):
@@ -39,17 +38,23 @@ class Cannon(pygame.sprite.Sprite):
       self.rect = self.rect.move(-speed, 0)
     elif keys_pressed[pygame.K_RIGHT]:
       self.rect = self.rect.move(speed, 0)
-    if keys_pressed[pygame.K_SPACE]:
-      image_info = sprites.ImageInfo(
-          image=pygame.image.load('image/bullet32x32.png'),
-          direction=pygame.Vector2(0, -10))  
-      position = (self.rect.centerx - image_info.image.get_width() // 2,
-                  self.rect.top - image_info.image.get_height())
-      bullet = sprites.Bullet(image_info, position,
-          self.boundary,
-          sprites.ShootgingStrategy.NO_TARGET, None)
-      self.all_sprites.add(bullet)
+  
+  def shoot(self):
+    image_info = sprites.ImageInfo(
+        image=pygame.image.load('image/bullet32x32.png'),
+        direction=pygame.Vector2(0, -10))  
+    position = (self.rect.centerx - image_info.image.get_width() // 2,
+                self.rect.top - image_info.image.get_height())
+    bullet = sprites.Bullet(image_info, position,
+        self.boundary,
+        sprites.ShootgingStrategy.NO_TARGET, None)
+    self.all_sprites.add(bullet)
       
+  def process_event(self, event):
+    # Should not call pygame.event.get() here because it empties
+    # the event queue so others won't get their events.
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+      self.shoot()
 
 def main():
   """Program main function."""
@@ -67,7 +72,9 @@ def main():
   bg_image = pygame.transform.scale(bg_image, display_size)
   all_sprites = pygame.sprite.Group()
   cmd_sprites = pygame.sprite.Group()
-  all_sprites.add(Cannon(display_size,all_sprites))
+  cannon = Cannon(display_size,all_sprites)
+  all_sprites.add(cannon)
+  cmd_sprites.add(cannon)
   
 
   clock = pygame.time.Clock()
