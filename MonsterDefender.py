@@ -55,16 +55,17 @@ class MainCharacter(pygame.sprite.Sprite):
       self.image_index = 0
   
   def shoot(self):
-    image = pygame.image.load('image/bullet32x32.png')
-    image = pygame.transform.scale(image, (16, 16))
+    image = pygame.image.load('image/bullet64x64.ico')
+    image = pygame.transform.scale(image, (32, 32))
     image_info = sprites.ImageInfo(
         image=image,
-        direction=pygame.Vector2(0, -10))  
-    position = (self.rect.centerx - image_info.image.get_width() // 2,
-                self.rect.top - image_info.image.get_height())
+        direction=pygame.Vector2(-10, 0))  
+    position = (self.rect.left + image_info.image.get_width() // 2,
+                self.rect.top)
     bullet = sprites.Bullet(image_info, position,
         self.boundary,
         sprites.ShootgingStrategy.NO_TARGET, None)
+    bullet.change_to_direction(pygame.Vector2(0, -10))
     self.all_sprites.add(bullet)
       
   def process_event(self, event):

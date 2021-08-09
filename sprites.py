@@ -8,7 +8,10 @@ import pygame
 
 import image_lib
 
-ImageInfo = collections.namedtuple('ImageInfo', 'image direction')
+ImageInfo = collections.namedtuple(
+    'ImageInfo',
+    'image direction')
+
 
 class MovingSprite(pygame.sprite.Sprite):
   """A pygame sprite that can move."""
