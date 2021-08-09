@@ -266,18 +266,10 @@ def scale_image(image: pygame.Surface,
   return pygame.transform.scale(image, (x_size, y_size))
 
 
-def sequence_animator_factory_from_file(
+def images_from_file(
     image_path: str,
-    grid_size: Optional[Tuple[int, int]],
-    size: Tuple[int, int],
-    interval: int) -> SequenceAnimatorFactory:
-  """Create an sequence image animator from a file.
-  Args:
-      owner: Owner of this animator class.
-      grid_size: Number of rows/columns of sub-images.
-      size: Size of each sub-image.
-      interval: Intervals (frames) between two frames.
-  """
+    grid_size: Optional[Tuple[int, int]]=None,
+    size: Optional[Tuple[int, int]]=None) -> List[pygame.Surface]:
   if grid_size is None:
     # Infer grid size from file name
     file_name_pieces = os.path.splitext(image_path)[0].rsplit('_', 1)
@@ -286,5 +278,20 @@ def sequence_animator_factory_from_file(
       if len(grid_size) == 2:
         row = int(grid_size[0])
         col = int(grid_size[1])
-  images = split_image(pygame.image.load(image_path), row, col, size)
+  return split_image(pygame.image.load(image_path), row, col, size)
+
+
+def sequence_animator_factory_from_file(
+    image_path: str,
+    grid_size: Optional[Tuple[int, int]],
+    size: Tuple[int, int],
+    interval: int) -> SequenceAnimatorFactory:
+  """Create an sequence image animator from a file.
+  Args:
+      image_path: Image file path.
+      grid_size: Number of rows/columns of sub-images.
+      size: Size of each sub-image.
+      interval: Intervals (frames) between two frames.
+  """
+  images = images_from_file(image_path, grid_size, size)
   return SequenceAnimatorFactory(images, interval)

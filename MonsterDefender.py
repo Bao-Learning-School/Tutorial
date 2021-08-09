@@ -5,6 +5,7 @@ import time
 
 from pygame import image
 
+import image_lib
 import sprites
 
 
@@ -20,12 +21,17 @@ def process_events(cmd_spites):
       sprite.process_event(event)
   return True
 
-class Cannon(pygame.sprite.Sprite):
+class MainCharacter(pygame.sprite.Sprite):
   def __init__(self, screen_size, all_sprites):
     super().__init__()
     size = (100,100)
-    image = pygame.image.load('image/cannon.png').convert_alpha()
-    self.image = pygame.transform.scale(image, size)
+    images = image_lib.images_from_file('image/serge_4x4.png')
+    self.left_image_sequence = images[4:8]
+    self.right_image_sequence = images[8:12]
+    self.image_index = 0
+    self.default_image = images[12]
+    self.image = self.default_image
+    self.ipu = 3 
     self.rect = pygame.Rect((screen_size[0] // 2,
                              screen_size[1] - size[1] - 20), size)
     self.boundary = pygame.Rect((0, 0), screen_size)
@@ -36,12 +42,23 @@ class Cannon(pygame.sprite.Sprite):
     keys_pressed = pygame.key.get_pressed()
     if keys_pressed[pygame.K_LEFT]:
       self.rect = self.rect.move(-speed, 0)
+      self.image_index += 1
+      self.image_index %= len(self.left_image_sequence) * self.ipu
+      self.image = self.left_image_sequence[self.image_index // self.ipu]
     elif keys_pressed[pygame.K_RIGHT]:
       self.rect = self.rect.move(speed, 0)
+      self.image_index += 1
+      self.image_index %= len(self.right_image_sequence) * self.ipu
+      self.image = self.right_image_sequence[self.image_index // self.ipu]
+    else:
+      self.image = self.default_image
+      self.image_index = 0
   
   def shoot(self):
+    image = pygame.image.load('image/bullet32x32.png')
+    image = pygame.transform.scale(image, (16, 16))
     image_info = sprites.ImageInfo(
-        image=pygame.image.load('image/bullet32x32.png'),
+        image=image,
         direction=pygame.Vector2(0, -10))  
     position = (self.rect.centerx - image_info.image.get_width() // 2,
                 self.rect.top - image_info.image.get_height())
@@ -72,9 +89,9 @@ def main():
   bg_image = pygame.transform.scale(bg_image, display_size)
   all_sprites = pygame.sprite.Group()
   cmd_sprites = pygame.sprite.Group()
-  cannon = Cannon(display_size,all_sprites)
-  all_sprites.add(cannon)
-  cmd_sprites.add(cannon)
+  mc = MainCharacter(display_size,all_sprites)
+  all_sprites.add(mc)
+  cmd_sprites.add(mc)
   
 
   clock = pygame.time.Clock()
