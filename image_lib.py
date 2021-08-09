@@ -5,8 +5,6 @@ import os
 from typing import List, Optional, Tuple
 import pygame
 
-ImageInfo = collections.namedtuple('ImageInfo', 'image direction')
-
 class Animator(object):
   """Animates a sequence of images."""
 
@@ -221,24 +219,24 @@ class SequenceAnimatorFactory(object):
 
 
 def split_image(image: pygame.Surface,
-                y_pieces: int,
-                x_pieces: int,
+                rows: int,
+                columns: int,
                 target_size: Optional[Tuple[int, int]]=None) -> List[pygame.Surface]:
   """Split an image evenly into pieces.
   Args:
     image: The original image.
-    x_pieces: Number of pieces horizontally.
-    y_pieces: Number of pieces vertically.
+    rows: Number of rows.
+    columns: Number of columns
     target_size: Output sub-image size.
   Returns:
     A list of sub-images.
   """
-  piece_width = image.get_width() // x_pieces
-  piece_height = image.get_height() // y_pieces
+  piece_width = image.get_width() // columns
+  piece_height = image.get_height() // rows
   images = []
-  for x in range(x_pieces):
-    for y in range(y_pieces):
-      rect = pygame.Rect(y * piece_width, x * piece_height, piece_width, piece_height)
+  for row in range(rows):
+    for col in range(columns):
+      rect = pygame.Rect(col * piece_width, row * piece_height, piece_width, piece_height)
       surface = pygame.Surface((piece_width, piece_height), pygame.SRCALPHA, 32)
       surface.blit(image, (0,0), rect)
       if target_size is not None:

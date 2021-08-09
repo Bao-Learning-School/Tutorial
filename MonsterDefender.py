@@ -25,13 +25,13 @@ class MainCharacter(pygame.sprite.Sprite):
   def __init__(self, screen_size, all_sprites):
     super().__init__()
     size = (100,100)
-    images = image_lib.images_from_file('image/serge_4x4.png')
-    self.left_image_sequence = images[4:8]
-    self.right_image_sequence = images[8:12]
+    images = image_lib.images_from_file('image/SsmWh_4x9.png')
+    self.left_image_sequence = images[9:18]
+    self.right_image_sequence = images[27:]
     self.image_index = 0
-    self.default_image = images[12]
+    self.default_image = images[1]
     self.image = self.default_image
-    self.ipu = 3 
+    self.ipu = 2
     self.rect = pygame.Rect((screen_size[0] // 2,
                              screen_size[1] - size[1] - 20), size)
     self.boundary = pygame.Rect((0, 0), screen_size)
