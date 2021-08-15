@@ -246,17 +246,11 @@ class ShootingCapability(object):
     self.sprite_group.add(bullet)
 
 
-
-class Ball(MovingSprite):
-  """A ball object."""
+class Target(MovingSprite):
+  """A target object."""
 
   def __init__(self, image, boundary,
-               position, radius, velocity, bouncy_rate=1.0, score=1):
-    super().__init__(image, position, (radius*2, radius*2), velocity, boundary)
-    self.bouncy_rate = bouncy_rate
+               position, size, velocity, score=1):
+    super().__init__(image, position, size, velocity, boundary,
+                     kill_if_out_of_boundary=True)
     self.score = score
-
-  def get_hit_norm(self, sprite):
-    """Hit norm of the two balls."""
-    return (pygame.math.Vector2(*sprite.center()) -
-            pygame.math.Vector2(*self.rect.center))
